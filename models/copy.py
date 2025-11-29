@@ -1,7 +1,18 @@
-class Copy():
+from sqlalchemy import Column, Integer, Boolean, ForeignKey
+from infrastructure.connectionDB import Base
+
+# classe de exemplares
+class Copy(Base):
     
-    def __init__(self, id: int, id_library: int, id_book: int, quantity: int, is_global: bool):
-        self.id = id
+    __tablename__ = 'copy'
+
+    id = Column('id', Integer, primary_key=True, autoincrement=True)
+    id_library = Column('id_library', ForeignKey('library.id'))
+    id_book = Column('id_book', ForeignKey('book.id'))
+    quantity = Column('quantity', Integer, nullable=False)
+    is_global = Column('is_global', Boolean, nullable=False)
+    
+    def __init__(self, id_library: int, id_book: int, quantity: int, is_global: bool):
         self.id_library = id_library
         self.id_book = id_book
         self.quantity = quantity
