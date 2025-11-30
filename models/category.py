@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from infrastructure.connectionDB import Base
 
-# Classe de categorias
+# classe de categorias
 class Category(Base):
     
     __tablename__ = 'category'

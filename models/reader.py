@@ -2,6 +2,7 @@ from sqlalchemy import Column, String, Integer, Boolean, ForeignKey
 from infrastructure.connectionDB import Base
 from .user import User
 
+# classe de leitores
 class Reader(User, Base):
     
     __tablename__ = 'reader'
