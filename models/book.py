@@ -7,7 +7,7 @@ class Book(Base):
 
     __tablename__ = 'book'
 
-    id = Column('id', Integer, primary_key=True, autoincrement=True)
+    id:int = Column('id', Integer, primary_key=True, autoincrement=True)
     id_category = Column('id_category', ForeignKey('category.id'))
     title = Column('title', String, nullable=False)
     author = Column('author', String, nullable=False)
