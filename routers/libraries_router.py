@@ -3,18 +3,17 @@ from infrastructure.dependencies import get_session
 from sqlalchemy.orm import Session
 from models import Reader
 from services import ReaderService, CopyService
-from schemas import ReaderSchema, CopySchema
+from schemas import CopySchema, ReaderCreate, ReaderResponse
 from exceptions.reader_exception import ReaderAlreadyExistsError
 from exceptions.copy_exception import IsbnNotFoundError
 
 libraries_router = APIRouter(prefix='/libraries', tags=['libraries'])
 
-@libraries_router.post('/readers')
-async def create_reader(reader_schema: ReaderSchema, session: Session = Depends(get_session)):
+@libraries_router.post('/{library_id}/readers', response_model=ReaderResponse, status_code=201)
+async def create_reader(library_id:int, reader_data: ReaderCreate, session: Session = Depends(get_session)):
+    """Cria um novo leitor na plataforma associado à uma biblioteca"""
     try:
-        # cria um novo leitor no banco de dados
-        reader = Reader(reader_schema.id_library, reader_schema.name, reader_schema.email, reader_schema.password, reader_schema.cep)
-        ReaderService.create(session, reader)
+        return ReaderService.create(session, reader_data, library_id)
 
     except ReaderAlreadyExistsError as e:
         raise HTTPException(status_code=400, detail=str(e))

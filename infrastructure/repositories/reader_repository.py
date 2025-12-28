@@ -8,6 +8,7 @@ class ReaderRepository():
     def create(session: Session, reader: Reader):
         session.add(reader)
         session.commit()
+        return reader
     
     @staticmethod
     def get_all(session: Session, id_library: int):
