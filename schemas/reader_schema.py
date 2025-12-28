@@ -1,11 +1,22 @@
 from pydantic import BaseModel
 
-class ReaderSchema(BaseModel):
+class ReaderBase(BaseModel):
+    name:str
+    email:str
+    cep:str
+
+    class Config:
+        from_attributes = True
+
+class ReaderCreate(ReaderBase):
+    password:str
+
+    class Config:
+        from_attributes = True
+
+
+class ReaderResponse(ReaderBase):
     id_library: int
-    name: str
-    email: str
-    password: str
-    cep: str
 
     class Config:
         from_attributes = True

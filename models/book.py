@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from infrastructure.connectionDB import Base
+from utils import normalize_string
 
 # classe de livros
 class Book(Base):
@@ -15,12 +16,14 @@ class Book(Base):
     image = Column('image', String, nullable=False)
     age_rating = Column('age_rating', String, nullable=False)
     isbn =  Column('isbn', String, unique=True, nullable=False)
+    search_title = Column('search_title', String, nullable=False)
 
     copies = relationship('Copy', back_populates='book')
     
     def __init__(self, id_category: int, title: str, author: str, description: str, image: str, age_rating: str, isbn: str):
         self.id_category = id_category
         self.title = title
+        self.search_title = normalize_string(title)
         self.author = author
         self.description = description
         self.image = image
