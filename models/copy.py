@@ -14,6 +14,7 @@ class Copy(Base):
     is_global = Column('is_global', Boolean, nullable=False)
 
     book = relationship('Book', back_populates='copies')
+    library = relationship('Library', uselist=False)
     
     def __init__(self, id_library: int, id_book: int, quantity: int, is_global: bool):
         self.id_library = id_library

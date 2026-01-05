@@ -8,7 +8,7 @@ from exceptions.library_exception import LibraryAlreadyExistsError
 
 auth_router = APIRouter(prefix='/auth', tags=['auth'])
 
-@auth_router.post('/create_library')
+@auth_router.post('/library')
 async def create_library(library_schema: LibrarySchema, session: Session = Depends(get_session)):
     try:
         # cria uma nova biblioteca no banco de dados
