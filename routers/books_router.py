@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from infrastructure.dependencies import get_session
 from sqlalchemy.orm import Session
 from services import BookService
-from schemas import SearchBook
+from schemas import BookSearch
 from exceptions.book_exception import BookNotFoundError
 
 # Roteador para operações com livros
@@ -16,7 +16,7 @@ async def get_books(cursor:int = Query(1, ge=1), size:int = Query(10, le=50), se
 
 # Rota para filtrar livros
 @books_router.post("/search")
-async def filter_books(filters:SearchBook, session:Session = Depends(get_session)):
+async def filter_books(filters:BookSearch, session:Session = Depends(get_session)):
     """Search using a combination of filters."""
     return BookService.filter_books(filters, session)
 

@@ -26,3 +26,9 @@ class BookSchema(BaseModel):
 
     class Config:
         from_attributes = True
+
+class BookSearch(BaseModel):
+    title:str|None = None
+    category_ids:list[int]|None = None
+    library_ids:list[int]|None = None
+    available:bool|None = None
