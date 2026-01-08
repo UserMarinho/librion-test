@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from infrastructure.dependencies import get_session
 from sqlalchemy.orm import Session
-from services import BookService
+from services import BookService, CopyService
 from schemas import BookSearch
 from exceptions.book_exception import BookNotFoundError
 
@@ -34,8 +34,4 @@ async def get_book_by_id(book_id:int, session:Session = Depends(get_session)):
 @books_router.get("/{book_id}/copies")
 async def get_copies(book_id:int, session:Session = Depends(get_session)):
     """Get copies of a book"""
-    try:
-        return BookService.get_copies(book_id, session)
-    
-    except BookNotFoundError:
-        raise HTTPException(status_code=404)
+    return CopyService.get_copies_by_book(session, book_id)

@@ -27,10 +27,3 @@ class BookService():
             raise BookNotFoundError()
 
         return book
-    
-    @staticmethod
-    def get_copies(book_id:int, session:Session):
-        #Verifica se existe um livro com esse Id
-        BookService.get_by_id(book_id, session)
-
-        return r.list_copies(book_id, session)

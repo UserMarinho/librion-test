@@ -1,8 +1,7 @@
 from sqlalchemy.orm import Session
-from infrastructure.repositories import CopyRepository, BookRepository, ReaderRepository
+from infrastructure.repositories import CopyRepository, BookRepository
 from models import Copy, Book
 from exceptions.copy_exception import IsbnNotFoundError, CopyNotFoundError
-from exceptions.reader_exception import ReaderNotFoundError
 from utils import search_book
 from schemas import CopyCreate
 
@@ -32,7 +31,7 @@ class CopyService():
         return all_copies
     
     @staticmethod
-    def find_copy(session: Session, copy_id):
+    def find_copy(session: Session, copy_id:int):
          # Busca o exemplar no banco de dados
         copy = CopyRepository.find_copy(session, copy_id)
 
@@ -41,3 +40,8 @@ class CopyService():
             raise CopyNotFoundError(str("Exemplar não encontrado!"))
         
         return copy
+
+    # Retorna todas as cópias de um livro
+    @staticmethod
+    def get_copies_by_book(session: Session, book_id:int):
+        return CopyRepository.find_by_book_id(session, book_id)

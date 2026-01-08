@@ -85,13 +85,3 @@ class BookRepository():
             query = BookRepository.__filter_by_libraries(query, filters.library_ids)
 
         return query.all()
-
-    @staticmethod
-    def list_copies(book_id:int, session:Session):
-        query = (
-            session.query(Copy)
-            .options(joinedload(Copy.library))
-            .filter(Copy.id_book == book_id)
-        )
-        
-        return query.all()
