@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from infrastructure.repositories import CopyRepository, BookRepository
 from models import Copy, Book
-from exceptions.copy_exception import IsbnNotFoundError, CopyNotFoundError, CopyNotAvailableError
+from exceptions.copy_exception import IsbnNotFoundError, CopyNotFoundError, CopyOutOfStock
 from utils import search_book
 from schemas import CopyCreate
 
@@ -50,7 +50,7 @@ class CopyService():
     @staticmethod
     def decrease_available(session: Session, copy: Copy):
         if copy.quantity_available == 0:
-            raise CopyNotAvailableError(str("Exemplar sem estoque para empréstimo!"))
+            raise CopyOutOfStock(str("Exemplar sem estoque para empréstimo!"))
         
         copy.quantity_available = copy.quantity
         copy.quantity_available -= 1

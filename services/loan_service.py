@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from models import Loan
 from schemas import LoanRequest
 from services import ReaderService, CopyService
-from exceptions.copy_exception import CopyNotAvailableError
+from exceptions.copy_exception import CopyOutOfStock
 from exceptions.loan_exception import LoanDenied
 from infrastructure.repositories import LoanRepository
 
@@ -15,7 +15,7 @@ class LoanService():
 
         # Erro: Não há exemplar disponível
         if copy.quantity_available == 0:
-            raise CopyNotAvailableError(str("Sem estoque disponível para empréstimo!"))
+            raise CopyOutOfStock(str("Sem estoque disponível para empréstimo!"))
         
         # Busca o leitor no banco de dados
         reader = ReaderService.find_reader(session, data_request.reader_id)
