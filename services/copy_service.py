@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from infrastructure.repositories import CopyRepository, BookRepository
 from models import Copy, Book
-from exceptions.copy_exception import IsbnNotFoundError, CopyNotFoundError
+from exceptions.copy_exception import IsbnNotFoundError, CopyNotFoundError, CopyNotAvailableError
 from utils import search_book
 from schemas import CopyCreate
 
@@ -45,3 +45,13 @@ class CopyService():
     @staticmethod
     def get_copies_by_book(session: Session, book_id:int):
         return CopyRepository.find_by_book_id(session, book_id)
+    
+    # Diminui um na quantidade de cópias disponíveis para empréstimo
+    @staticmethod
+    def decrease_available(session: Session, copy: Copy):
+        if copy.quantity_available == 0:
+            raise CopyNotAvailableError(str("Exemplar sem estoque para empréstimo!"))
+        
+        copy.quantity_available = copy.quantity
+        copy.quantity_available -= 1
+        session.add(copy)

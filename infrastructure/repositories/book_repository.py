@@ -1,5 +1,4 @@
-from sqlalchemy.orm import Session, Query, joinedload
-from sqlalchemy import exists
+from sqlalchemy.orm import Session, Query
 from models import Book, Copy
 from schemas import BookSearch
 from utils import normalize_string

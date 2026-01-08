@@ -1,2 +1,12 @@
+from sqlalchemy.orm import Session
+from models import Copy, Loan
+
 class LoanRepository:
-    pass
+
+    @staticmethod
+    def register_loan(session: Session, loan: Loan):
+        session.add(loan)
+        session.commit()
+        session.refresh(loan)
+
+        return loan
