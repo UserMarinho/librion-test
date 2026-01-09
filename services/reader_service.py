@@ -39,6 +39,13 @@ class ReaderService():
 
         # Erro: O leitor não foi encontrado
         if not reader:
-            raise ReaderNotFoundError(str("Leitor não encontrado!"))
+            raise ReaderNotFoundError('Leitor não encontrado!')
+        
+        return reader
+    
+    # verifica por meio do email se um Reader já está cadastrado 
+    @staticmethod
+    def already_registered(session: Session, email: str):
+        reader = ReaderRepository.find_by_email(session, email)
         
         return reader
