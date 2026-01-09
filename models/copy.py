@@ -11,6 +11,7 @@ class Copy(Base):
     id_library = Column('id_library', ForeignKey('library.id'))
     id_book = Column('id_book', ForeignKey('book.id'))
     quantity = Column('quantity', Integer, nullable=False)
+    quantity_available = Column('quantity_available', Integer)
     is_global = Column('is_global', Boolean, nullable=False)
 
     book = relationship('Book', back_populates='copies')
@@ -20,4 +21,5 @@ class Copy(Base):
         self.id_library = id_library
         self.id_book = id_book
         self.quantity = quantity
+        self.quantity_available = quantity
         self.is_global = is_global

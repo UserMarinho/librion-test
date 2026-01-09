@@ -1,0 +1,2 @@
+class LoanDenied(Exception):
+    pass

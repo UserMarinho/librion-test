@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from infrastructure.repositories import BookRepository as r
-from schemas import SearchBook
+from schemas import BookSearch
 from exceptions.book_exception import BookNotFoundError
 
 class BookService():
@@ -16,21 +16,14 @@ class BookService():
         }
 
     @staticmethod
-    def filter_books(filters:SearchBook, session:Session):
+    def filter_books(filters:BookSearch, session:Session):
         return r.combined_filters(filters, session)
     
     @staticmethod
     def get_by_id(book_id:int, session:Session):
-        book = r.get_by_id(book_id, session)
+        book = r.find_by_id(book_id, session)
 
         if not book:
             raise BookNotFoundError()
 
         return book
-    
-    @staticmethod
-    def get_copies(book_id:int, session:Session):
-        #Verifica se existe um livro com esse Id
-        BookService.get_by_id(book_id, session)
-
-        return r.list_copies(book_id, session)

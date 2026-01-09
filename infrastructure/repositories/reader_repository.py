@@ -5,6 +5,11 @@ from models import Reader
 class ReaderRepository():
 
     @staticmethod
+    def find_reader_by_id(session: Session, id_reader:int):
+        query = session.query(Reader).filter(Reader.id == id_reader).first()
+        return query
+
+    @staticmethod
     def create(session: Session, reader: Reader):
         session.add(reader)
         session.commit()

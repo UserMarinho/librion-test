@@ -14,7 +14,6 @@ class ReaderCreate(ReaderBase):
     class Config:
         from_attributes = True
 
-
 class ReaderResponse(ReaderBase):
     id_library: int
 

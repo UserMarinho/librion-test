@@ -13,13 +13,13 @@ app = FastAPI()
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 # importando os roteadores
-from routers import auth_router, libraries_router, books_router
+from routers import auth_router, libraries_router, books_router, loans_router
 
 # incluindo as rotas
 app.include_router(auth_router)
 app.include_router(libraries_router)
 app.include_router(books_router)
-
+app.include_router(loans_router)
 
 # para rodar o nosso código, executar no terminal: uvicorn main:app --reload
 
