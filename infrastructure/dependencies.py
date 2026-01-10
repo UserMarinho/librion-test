@@ -29,3 +29,17 @@ def verify_token(token: str = Depends(oauth2_schema), session: Session = Depends
         user = session.query(Library).where(Library.id == id_user).first()
 
     return user
+
+# pega a biblioteca logada
+def get_current_library(user: User = Depends(verify_token)):
+    if not isinstance(user, Library):
+        raise HTTPException(status_code=401, detail='Acesso negado!')
+    
+    return user
+
+# pega o leito logado
+def get_current_reader(user: User = Depends(verify_token)):
+    if not isinstance(user, Reader):
+        raise HTTPException(status_code=401, detail='Acesso negado!')
+    
+    return user

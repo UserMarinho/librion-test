@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from infrastructure.dependencies import get_session, verify_token
 from sqlalchemy.orm import Session
-from jose import jwt, JWTError
+from jose import jwt
 from models import Library, User
 from main import bcrypt_context, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY
 from services import LibraryService, ReaderService
