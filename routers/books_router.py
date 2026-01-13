@@ -30,7 +30,7 @@ async def get_book_by_id(book_id:int, session:Session = Depends(get_session)):
     except BookNotFoundError:
         raise HTTPException(status_code=404)
 
-#Rota para buscar as cópias registradas de um livro
+# Rota para buscar as cópias registradas de um livro
 @books_router.get("/{book_id}/copies")
 async def get_copies(book_id:int, session:Session = Depends(get_session)):
     """Get copies of a book"""

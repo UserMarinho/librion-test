@@ -10,3 +10,9 @@ class LoanRepository:
         session.refresh(loan)
 
         return loan
+    
+    @staticmethod
+    def list_reader_loans(session:Session, reader_id:int):
+        query = session.query(Loan).filter(Loan.reader_id == reader_id)
+        
+        return query.all()

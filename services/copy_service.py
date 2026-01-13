@@ -52,6 +52,5 @@ class CopyService():
         if copy.quantity_available == 0:
             raise CopyOutOfStock(str("Exemplar sem estoque para empréstimo!"))
         
-        copy.quantity_available = copy.quantity
         copy.quantity_available -= 1
         session.add(copy)
