@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Session
 from infrastructure.repositories import LibraryRepository
 from models import Library
-from exceptions.library_exception import LibraryAlreadyExistsError
+from exceptions.library_exception import LibraryAlreadyExistsError, LibraryNotFoundError
+from exceptions.login_exception import AccessDeniedError
 
 class LibraryService():
 
@@ -29,5 +30,17 @@ class LibraryService():
     @staticmethod
     def already_registered(session: Session, email: str):
         library = LibraryRepository.find_by_email(session, email)
+        
+        return library
+    
+    @staticmethod
+    def get_library_by_id(session:Session, library_id:int):
+        library = LibraryRepository.get_by_id(session, library_id)
+
+        if not library:
+            raise LibraryNotFoundError(str("Biblioteca não encontrada"))
+        
+        if library.id != library_id:
+            raise  AccessDeniedError(str("Você não tem permissão para acessar esse recurso"))
         
         return library

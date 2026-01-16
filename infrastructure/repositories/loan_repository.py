@@ -18,7 +18,16 @@ class LoanRepository:
         return query.all()
     
     @staticmethod
+    def list_library_loans(session:Session, library_id:id):
+        query = session.query(Loan).join(Copy).filter(Copy.id_library == library_id)
+        return query.all()
+    
+    @staticmethod
     def get_loan_by_id(session:Session, loan_id:int):
         query = session.query(Loan).filter(Loan.id == loan_id)
 
         return query.first()
+    
+    @staticmethod
+    def register_taken_date(session:Session, loan_id:int):
+        query = session.query(Loan).filter(Loan.id == loan_id).first()

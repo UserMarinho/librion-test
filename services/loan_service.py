@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from models import Loan
-from services import ReaderService, CopyService
+from services import ReaderService, CopyService, LibraryService
 from exceptions.copy_exception import CopyOutOfStock
 from exceptions.loan_exception import LoanDenied, LoanNotFound
 from exceptions.login_exception import AccessDeniedError
@@ -36,11 +36,13 @@ class LoanService():
     def list_reader_loans(reader_id:int, session:Session):
         # Busca o leitor no banco, caso não exista, raise exception
         reader = ReaderService.find_reader(session, reader_id)
-        return LoanRepository.list_reader_loans(session, reader.id)
+        return LoanRepository.list_reader_loans(session, reader_id)
     
     @staticmethod
     def list_library_loans(library_id:int, session:Session):
-        pass
+        # Busca a biblioteca, caso der erro, dá um raise
+        library = LibraryService.get_library_by_id(session, library_id)
+        return LoanRepository.list_library_loans(session, library_id)
     
     @staticmethod
     def get_reader_loan(reader_id:int, loan_id:int, session:Session):

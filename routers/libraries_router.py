@@ -8,14 +8,30 @@ from exceptions.reader_exception import ReaderAlreadyExistsError, ReaderNotFound
 from exceptions.copy_exception import IsbnNotFoundError, CopyAlreadyExistsError, CopyNotFoundError
 from exceptions.login_exception import AccessDeniedError
 from exceptions.loan_exception import LoanNotFound
+from exceptions.library_exception import LibraryNotFoundError
 
-libraries_router = APIRouter(prefix='/libraries', tags=['Libraries'], dependencies=[Depends(get_current_library)])
+libraries_router = APIRouter(prefix='/libraries', tags=['Libraries'])
 
 # Obtém a lista de bibliotecas cadastradas
 @libraries_router.get("/", response_model=list[LibraryResponse])
 async def list_libraries(session: Session = Depends(get_session)):
     try:
         return LibraryService.get_all(session)
+    
+    except Exception:
+        raise HTTPException(status_code=500)
+    
+# Obtém perfil de biblioteca autenticada
+@libraries_router.get("/me")
+async def get_auth_library(library: Library = Depends(get_current_library), session: Session = Depends(get_session)):
+    try:
+        return LibraryService.get_library_by_id(session, library.id)
+    
+    except LibraryNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    
+    except AccessDeniedError as e:
+        raise HTTPException(status_code=403, detail=str(e))
     
     except Exception:
         raise HTTPException(status_code=500)
@@ -140,14 +156,26 @@ async def get_copy_by_id(copy_id: int, library: Library = Depends(get_current_li
 
 # <------------------Empréstimos--------------------->
 
+# Retornar todos os emprëstimos de uma biblioteca
 @libraries_router.get("/me/loans")
 async def get_all_loans(library:Library = Depends(get_current_library), session: Session = Depends(get_session)):
-    pass
+    try:
+        return LoanService.list_library_loans(library.id, session)
+    
+    except LibraryNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    
+    except AccessDeniedError as e:
+        raise HTTPException(status_code=403, detail=str(e))
+    
+    except Exception:
+        raise HTTPException(status_code=500)
 
+# Retornar um empréstimo registrado na biblioteca
 @libraries_router.get("/me/loans/{loan_id}")
 async def get_loan_by_id(loan_id:int, library:Library = Depends(get_current_library), session: Session = Depends(get_session)):
     try:
-        return LoanService.get_reader_loan(library.id, loan_id, session)
+        return LoanService.get_library_loan(library.id, loan_id, session)
     
     except LoanNotFound as e:
         raise HTTPException(status_code=404, detail=str(e))
@@ -158,12 +186,12 @@ async def get_loan_by_id(loan_id:int, library:Library = Depends(get_current_libr
     except Exception:
         raise HTTPException(status_code=500)
 
-# Registra a data em que foi retirado o livro
+# Registrar a data em que foi retirado o livro
 @libraries_router.patch("/me/loans/{id_loan}/register-taken-date")
 async def register_taken_date():
     pass
 
-# (BIBLIOTECA) - Registra a data de devolução
+# Registrar a data de devolução
 @libraries_router.patch("/me/loans/{id_loan}/register-return-date")
 async def register_return_date():
     pass
