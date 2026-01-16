@@ -6,14 +6,9 @@ from exceptions.book_exception import BookNotFoundError
 class BookService():
 
     @staticmethod
-    def list_books(cursor:int|None, size:int, session:Session):
-        books = r.list_books(cursor, size, session)
-        next_cursor = books[-1].id if books else None 
-        
-        return {
-            "books": books,
-            "next_cursor": next_cursor
-        }
+    def list_books(session:Session):
+        books = r.list_books(session)
+        return books
 
     @staticmethod
     def filter_books(filters:BookSearch, session:Session):

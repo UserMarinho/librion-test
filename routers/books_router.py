@@ -8,11 +8,11 @@ from exceptions.book_exception import BookNotFoundError
 # Roteador para operações com livros
 books_router = APIRouter(prefix="/books", tags=["books"])
 
-# Retorna uma lista de livros limitadas por um cursor (Por qual id iniciar?) e o size (Quantidade de itens)
+# Retorna todos os livros
 @books_router.get("/")
-async def get_books(cursor:int = Query(1, ge=1), size:int = Query(10, le=50), session:Session = Depends(get_session)):
-    """Get books limit by cursor and size"""
-    return BookService.list_books(cursor, size, session)
+async def get_books(session:Session = Depends(get_session)):
+    """Get all books"""
+    return BookService.list_books(session)
 
 # Rota para filtrar livros
 @books_router.post("/search")

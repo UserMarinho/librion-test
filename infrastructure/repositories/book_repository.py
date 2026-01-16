@@ -24,17 +24,11 @@ class BookRepository():
     def find_by_id(id:int, session:Session):
         return session.query(Book).where(Book.id == id).first()
     
-    # Retornar uma lista de livros com tamanho máximo
+    # Retornar todos os livros
     @staticmethod
-    def list_books(cursor:int|None, size:int, session:Session):
+    def list_books(session:Session):
         query = session.query(Book)
-
-        if cursor:
-            query = query.filter(Book.id > cursor)
-        
-        books = query.limit(size).all()
-
-        return books
+        return query.all()
 
     # Função privada para combinar query de filtro
     # Obs: Retorna uma Query, não um item do banco
