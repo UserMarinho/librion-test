@@ -1,5 +1,4 @@
 from sqlalchemy.orm import Session
-from main import bcrypt_context
 from infrastructure.repositories import ReaderRepository
 from models import Reader
 from schemas import ReaderCreate, ReaderUpdate
@@ -23,10 +22,16 @@ class ReaderService():
     # atualiza as informações de um leitor no banco de dados
     @staticmethod
     def update(session:Session, reader_id: int, reader_data: ReaderUpdate, library_id: int):
-        ReaderService.find_reader_in_library(session, reader_id, library_id)
+        reader = ReaderService.find_reader_in_library(session, reader_id, library_id)
 
-        reader = ReaderRepository.update(session, reader_id, reader_data)
+        reader = ReaderRepository.update(session, reader, reader_data)
         return reader
+    
+    @staticmethod
+    def delete(session: Session, reader_id: int, library_id: int):
+        reader = ReaderService.find_reader_in_library(session, reader_id, library_id)
+
+        ReaderRepository.delete(session, reader)
 
     @staticmethod
     def list_readers_by_library(session: Session, id_library: int):
@@ -54,7 +59,7 @@ class ReaderService():
         reader =  ReaderService.find_reader(session, reader_id)
 
         if reader.id_library != library_id:
-            raise AccessDeniedError('Você não tem permissão para acessar as informações desse usuário!')
+            raise AccessDeniedError('Você não tem acesso a esse usuário!')
         
         return reader
 

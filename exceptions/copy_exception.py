@@ -4,5 +4,8 @@ class IsbnNotFoundError(Exception):
 class CopyNotFoundError(Exception):
     pass
 
+class CopyAlreadyExistsError(Exception):
+    pass
+
 class CopyOutOfStock(Exception):
     pass

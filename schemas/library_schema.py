@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-class LibrarySchema(BaseModel):
+class LibraryCreate(BaseModel):
     name: str
     email: str
     password: str
@@ -8,3 +8,11 @@ class LibrarySchema(BaseModel):
     
     class Config:
         from_attributes = True
+
+class LibraryResponse(BaseModel):
+    name: str
+    cep: str
+
+    class Config:
+        from_attributes = True
+    

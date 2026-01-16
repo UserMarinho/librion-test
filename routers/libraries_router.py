@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from infrastructure.dependencies import get_session, get_current_library
 from sqlalchemy.orm import Session
 from models import Library
-from services import ReaderService, CopyService
-from schemas import CopyCreate, CopyResponse, ReaderCreate, ReaderResponse, ReaderUpdate
+from services import ReaderService, CopyService, LibraryService
+from schemas import CopyCreate, CopyResponse, ReaderCreate, ReaderResponse, ReaderUpdate,LibraryResponse
 from exceptions.reader_exception import ReaderAlreadyExistsError, ReaderNotFoundError
 from exceptions.copy_exception import IsbnNotFoundError
 from exceptions.login_exception import AccessDeniedError
@@ -11,9 +11,14 @@ from exceptions.login_exception import AccessDeniedError
 libraries_router = APIRouter(prefix='/libraries', tags=['Libraries'], dependencies=[Depends(get_current_library)])
 
 # Obtém a lista de bibliotecas cadastradas
-@libraries_router.get("/")
-async def list_libraries():
-    pass
+@libraries_router.get("/", response_model=list[LibraryResponse])
+async def list_libraries(session: Session = Depends(get_session)):
+    try:
+        return LibraryService.get_all(session)
+    
+    except Exception:
+        raise HTTPException(status_code=500)
+    
 
 #<------------------Leitores--------------------->
 
@@ -63,6 +68,22 @@ async def patch_reader(reader_id: int, reader_data: ReaderUpdate, library: Libra
     try:
         reader = ReaderService.update(session, reader_id, reader_data, library.id)
         return reader
+
+    except ReaderNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    
+    except AccessDeniedError as e:
+        raise HTTPException(status_code=403, detail=str(e))
+    
+    except Exception:
+        raise HTTPException(status_code=500)
+
+@libraries_router.delete("/me/readers/{reader_id}")
+async def delete_reader(reader_id: int, library: Library = Depends(get_current_library), session: Session = Depends(get_session)):
+    try:
+        ReaderService.delete(session, reader_id, library.id)
+
+        return True
 
     except ReaderNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))

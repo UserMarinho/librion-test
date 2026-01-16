@@ -5,7 +5,7 @@ from jose import jwt
 from models import Library, User
 from main import bcrypt_context, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY
 from services import LibraryService, ReaderService
-from schemas import LibrarySchema, LoginSchema
+from schemas import LibraryCreate, LoginSchema
 from exceptions.library_exception import LibraryAlreadyExistsError
 from exceptions.login_exception import LoginError
 from datetime import datetime, timedelta, timezone
@@ -32,7 +32,7 @@ def _auth_user(user: User | None, password):
         raise LoginError('Usuário não encontrado ou credenciais inválidas!')
         
 @auth_router.post('/library')
-async def create_library(library_schema: LibrarySchema, session: Session = Depends(get_session)):
+async def create_library(library_schema: LibraryCreate, session: Session = Depends(get_session)):
     try:
         # cria uma nova biblioteca no banco de dados
         library = Library(**library_schema.model_dump())

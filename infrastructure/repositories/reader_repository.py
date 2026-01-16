@@ -21,9 +21,7 @@ class ReaderRepository():
         return reader
     
     @staticmethod
-    def update(session: Session, reader_id: int, data: ReaderUpdate):
-        reader = ReaderRepository.find_reader_by_id(session, reader_id)
-
+    def update(session: Session, reader: Reader, data: ReaderUpdate):
         update_data = data.model_dump(exclude_unset=True)
 
         for field, value in update_data.items():
@@ -34,6 +32,12 @@ class ReaderRepository():
 
         return reader
         
+
+    @staticmethod
+    def delete(session: Session, reader: Reader):
+        session.delete(reader)
+        session.commit()
+
 
     @staticmethod
     def list_readers_by_library(session: Session, id_library: int):
