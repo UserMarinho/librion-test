@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from infrastructure.dependencies import get_session
 from sqlalchemy.orm import Session
 from services import BookService, CopyService
-from schemas import BookSearch
+from schemas import BookSearch, CopyResponse
 from exceptions.book_exception import BookNotFoundError
 
 # Roteador para operações com livros
@@ -31,7 +31,7 @@ async def get_book_by_id(book_id:int, session:Session = Depends(get_session)):
         raise HTTPException(status_code=404)
 
 # Rota para buscar as cópias registradas de um livro
-@books_router.get("/{book_id}/copies")
+@books_router.get("/{book_id}/copies", response_model=list[CopyResponse])
 async def get_copies(book_id:int, session:Session = Depends(get_session)):
     """Get copies of a book"""
     return CopyService.get_copies_by_book(session, book_id)

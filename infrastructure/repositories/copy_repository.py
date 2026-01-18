@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session, joinedload
-from models import Copy, Book
+from models import Copy, Book, Library
 
 # repositório de exemplar
 class CopyRepository():
@@ -34,5 +34,5 @@ class CopyRepository():
     # Retorna todas as cópias de um livro
     @staticmethod
     def find_by_book_id(session: Session, book_id:int):
-        query = session.query(Copy).filter(Copy.id_book == book_id)
+        query = session.query(Copy).options(joinedload(Copy.library)).filter(Copy.id_book == book_id)
         return query.all()
