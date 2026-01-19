@@ -151,8 +151,8 @@ async def get_copy_by_id(copy_id: int, library: Library = Depends(get_current_li
     except CopyNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
     
-    except Exception as e :
-        raise HTTPException(status_code=500, detail=str(e))
+    except Exception:
+        raise HTTPException(status_code=500)
 
 @libraries_router.delete("/me/copies/{copy_id}")
 async def delete_copy(copy_id: int, library: Library = Depends(get_current_library), session: Session = Depends(get_session)):
@@ -166,8 +166,8 @@ async def delete_copy(copy_id: int, library: Library = Depends(get_current_libra
     except CopyNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
     
-    except Exception as e :
-        raise HTTPException(status_code=500, detail=str(e))
+    except Exception:
+        raise HTTPException(status_code=500)
 
 # <------------------Empréstimos--------------------->
 

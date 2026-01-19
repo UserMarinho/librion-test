@@ -3,6 +3,7 @@ from infrastructure.dependencies import get_session, get_current_reader
 from sqlalchemy.orm import Session
 from models import Reader
 from services import LoanService
+from schemas import LoanRequest, LoanResponse
 from exceptions.loan_exception import LoanDenied, LoanNotFound
 from exceptions.copy_exception import CopyOutOfStock, CopyNotFoundError
 from exceptions.reader_exception import ReaderNotFoundError
@@ -16,7 +17,7 @@ async def get_profile():
     pass
 
 # Listar todos os empréstimos de um leitor
-@readers_router.get("/me/loans")
+@readers_router.get("/me/loans", response_model=list[LoanResponse])
 async def list_reader_loans(reader: Reader = Depends(get_current_reader), session: Session = Depends(get_session)):
     """Lista de todos os empréstimos de um leitor"""
     try:
@@ -30,10 +31,10 @@ async def list_reader_loans(reader: Reader = Depends(get_current_reader), sessio
 
 # Sollicitar um empréstimo
 @readers_router.post("/me/loans")
-async def request_loan(copy_id:int, reader:Reader = Depends(get_current_reader), session:Session = Depends(get_session)):
+async def request_loan(loan_request: LoanRequest, reader:Reader = Depends(get_current_reader), session:Session = Depends(get_session)):
     """Solicitar o empréstimo de um exemplar (cópia)"""
     try:
-        return LoanService.request_loan(copy_id, reader.id, session)
+        return LoanService.request_loan(loan_request.copy_id, reader.id, session)
     
     except CopyNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))

@@ -1,9 +1,9 @@
 from pydantic import BaseModel
-from schemas.library_schema import LibraryResponse
+from schemas import LibraryResponse
 
 class CopyBase(BaseModel):
     quantity: int
-    quantity_available:int
+    #quantity_available:int
     is_global: bool
 
     class Config:
