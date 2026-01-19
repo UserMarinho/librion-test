@@ -1,7 +1,9 @@
 from pydantic import BaseModel
+from schemas.library_schema import LibraryResponse
 
 class CopyBase(BaseModel):
     quantity: int
+    quantity_available:int
     is_global: bool
 
     class Config:
@@ -14,7 +16,7 @@ class CopyCreate(CopyBase):
         from_attributes = True
 
 class CopyResponse(CopyBase):
-    id_library:int
+    library:LibraryResponse
     id_book:int
     
     class Config:

@@ -10,6 +10,7 @@ class LibraryCreate(BaseModel):
         from_attributes = True
 
 class LibraryResponse(BaseModel):
+    id: int
     name: str
     cep: str
 
